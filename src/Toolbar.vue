@@ -1,9 +1,9 @@
 <template>
     <v-toolbar flat dense color="blue-grey lighten-5">
         <v-toolbar-items>
-            <v-menu offset-y v-if="storages.length > 1">
-                <template v-slot:activator="{ on }">
-                    <v-btn icon class="storage-select-button mr-3" v-on="on">
+            <v-menu offset-y v-if="storages.length > 1" activator="">
+                <template v-slot:activator="{ props }">
+                    <v-btn icon class="storage-select-button mr-3" v-bind="props">
                         <v-icon>mdi-arrow-down-drop-circle-outline</v-icon>
                     </v-btn>
                 </template>
@@ -14,19 +14,20 @@
                         :disabled="item.code === storageObject.code"
                         @click="changeStorage(item.code)"
                     >
-                        <v-list-item-icon>
-                            <v-icon v-text="item.icon"></v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                        <template v-slot:prepend>
+                          <v-icon :icon="item.icon"></v-icon>
+                        </template>
+                        
+                        <v-list-item-title><span>{{ item.name }}</span></v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-menu>
             <v-btn text :input-value="path === '/'" @click="changePath('/')">
-                <v-icon class="mr-2">{{storageObject.icon}}</v-icon>
-                {{storageObject.name}}
+                <v-icon class="mr-2" :icon="storageObject.icon"></v-icon>
+                <span>{{storageObject.name}}</span>
             </v-btn>
             <template :key="index + '-vfor'" v-for="(segment, index) in pathSegments">
-                <v-icon :k="index + '-icon'">mdi-chevron-right</v-icon>
+                <v-icon :k="index + '-icon'" icon="mdi-chevron-right"></v-icon>
                 <v-btn
                     text
                     :input-value="index === pathSegments.length - 1"
@@ -37,15 +38,15 @@
         </v-toolbar-items>
         <div class="flex-grow-1"></div>
 
-        <template v-if="$vuetify.breakpoint.smAndUp">
+        <template v-if="$vuetify.display.smAndUp">
             <v-tooltip bottom v-if="pathSegments.length > 0">
-                <template v-slot:activator="{ on }">
-                    <v-btn icon @click="goUp" v-on="on">
+                <template v-slot:activator="{ props }">
+                    <v-btn icon @click="goUp" v-bind="props">
                         <v-icon>mdi-arrow-up-bold-outline</v-icon>
                     </v-btn>
                 </template>
-                <span v-if="pathSegments.length === 1">Up to "root"</span>
-                <span v-else>Up to "{{pathSegments[pathSegments.length - 2].name}}"</span>
+                <span v-if="pathSegments.length === 1"><span>Up to "root"</span></span>
+                <span v-else><span>Up to "{{pathSegments[pathSegments.length - 2].name}}"</span></span>
             </v-tooltip>
             <v-menu
                 v-model="newFolderPopper"
@@ -53,9 +54,9 @@
                 :nudge-width="200"
                 offset-y
             >
-                <template v-slot:activator="{ on }">
-                    <v-btn v-if="path" icon v-on="on" title="Create Folder">
-                        <v-icon>mdi-folder-plus-outline</v-icon>
+                <template v-slot:activator="{ props }">
+                    <v-btn v-if="path" icon v-bind="props" title="Create Folder">
+                        <v-icon icon="mdi-folder-plus-outline"></v-icon>
                     </v-btn>
                 </template>
                 <v-card>
@@ -64,7 +65,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <div class="flex-grow-1"></div>
-                        <v-btn @click="newFolderPopper = false" depressed>Cancel</v-btn>
+                        <v-btn @click="newFolderPopper = false" depressed><span>Cancel</span></v-btn>
                         <v-btn
                             color="success"
                             :disabled="!newFolderName"
@@ -163,7 +164,7 @@ export default {
 
 <style lang="scss" scoped>
 /* Storage Menu - alternate appearance
-.storage-select-button deep(.v-btn__content) {
+.storage-select-button ::v-deep(.v-btn__content) {
     flex-wrap: wrap;
     font-size: 11px;
 

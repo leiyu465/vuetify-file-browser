@@ -1,7 +1,10 @@
 <template>
     <v-card flat tile width="250" min-height="380" class="d-flex flex-column folders-tree-card">
         <div class="grow scroll-x">
-            <v-treeview
+            <v-list v-model:opened="open" class="folders-tree">
+                <MyTreeview :key="i" :item="item" v-for="(item, i) in items"  />
+            </v-list>
+            <!-- <v-treeview
                 :open="open"
                 :active="active"
                 :items="items"
@@ -32,7 +35,7 @@
                         <v-icon class="pa-0 mdi-18px" color="grey lighten-1">mdi-refresh</v-icon>
                     </v-btn>
                 </template>
-            </v-treeview>
+            </v-treeview> -->
         </div>
         <v-divider></v-divider>
         <v-toolbar dense flat class="shrink">
@@ -46,19 +49,24 @@
                 class="ml-n3"
             ></v-text-field>
             <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                    <v-btn icon @click="init" v-on="on">
+                <template v-slot:activator="{ props }">
+                    <v-btn icon @click="init" v-bind="props">
                         <v-icon>mdi-collapse-all-outline</v-icon>
                     </v-btn>
                 </template>
-                <span>Collapse All</span>
+                Collapse All
             </v-tooltip>
         </v-toolbar>
     </v-card>
 </template>
 
 <script>
+import MyTreeview from "./MyTreeview";
+
 export default {
+    components: {
+        MyTreeview
+    },
     props: {
         icons: Object,
         storage: String,
@@ -69,6 +77,17 @@ export default {
     },
     data() {
         return {
+            // open: ['Users'],
+            // admins: [
+            //     ['Management', 'mdi-account-multiple-outline'],
+            //     ['Settings', 'mdi-cog-outline'],
+            // ],
+            // cruds: [
+            //     ['Create', 'mdi-plus-outline'],
+            //     ['Read', 'mdi-file-outline'],
+            //     ['Update', 'mdi-update'],
+            //     ['Delete', 'mdi-delete'],
+            // ],
             open: [],
             active: [],
             items: [],
@@ -88,7 +107,7 @@ export default {
                         path: "/",
                         basename: "root",
                         extension: "",
-                        name: "root",
+                        name: "local",
                         children: []
                     }
                 ];
@@ -158,6 +177,7 @@ export default {
         },
         async refreshPending(){
             if (this.refreshPending) {
+                // console.log(this)
                 let item = this.findItem(this.path);
                 await this.readFolder(item);
                 this.$emit("refreshed");
@@ -178,7 +198,7 @@ export default {
         overflow-x: auto;
     }
 
-    deep(.folders-tree) {
+    ::v-deep(.folders-tree) {
         width: fit-content;
         min-width: 250px;
 

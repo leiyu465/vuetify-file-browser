@@ -6,13 +6,13 @@
             :storage="activeStorage"
             :endpoints="endpoints"
             :axios="axiosInstance"
-            v-on:storage-changed="storageChanged"
-            v-on:path-changed="pathChanged"
-            v-on:add-files="addUploadingFiles"
-            v-on:folder-created="refreshPending = true"
-        ></toolbar>
+            @storage-changed="storageChanged"
+            @path-changed="pathChanged"
+            @add-files="addUploadingFiles"
+            @folder-created="refreshPending = true"
+        />
         <v-row no-gutters>
-            <v-col v-if="tree && $vuetify.breakpoint.smAndUp" sm="auto">
+            <v-col v-if="tree && $vuetify.display.smAndUp" sm="auto">
                 <tree
                     :path="path"
                     :storage="activeStorage"
@@ -20,10 +20,10 @@
                     :endpoints="endpoints"
                     :axios="axiosInstance"
                     :refreshPending="refreshPending"
-                    v-on:path-changed="pathChanged"
-                    v-on:loading="loadingChanged"
-                    v-on:refreshed="refreshPending = false"
-                ></tree>
+                    @path-changed="pathChanged"
+                    @loading="loadingChanged"
+                    @refreshed="refreshPending = false"
+                />
             </v-col>
             <v-divider v-if="tree" vertical></v-divider>
             <v-col>
@@ -34,11 +34,11 @@
                     :endpoints="endpoints"
                     :axios="axiosInstance"
                     :refreshPending="refreshPending"
-                    v-on:path-changed="pathChanged"
-                    v-on:loading="loadingChanged"
-                    v-on:refreshed="refreshPending = false"
-                    v-on:file-deleted="refreshPending = true"
-                ></list>
+                    @path-changed="pathChanged"
+                    @loading="loadingChanged"
+                    @refreshed="refreshPending = false"
+                    @file-deleted="refreshPending = true"
+                />
             </v-col>
         </v-row>
         <upload
@@ -56,30 +56,34 @@
             v-on:clear-files="uploadingFiles = []"
             v-on:cancel="uploadingFiles = false"
             v-on:uploaded="uploaded"
-        ></upload>
+        />
     </v-card>
 </template>
 
+<script setup>
+    
+import Toolbar from "./Toolbar";
+import Tree from "./Tree";
+import List from "./List";
+import Upload from "./Upload";
+</script>
 <script>
 import axios from "axios";
 
-import Toolbar from "./Toolbar.vue";
-import Tree from "./Tree.vue";
-import List from "./List.vue";
-import Upload from "./Upload.vue";
 
 const availableStorages = [
     {
         name: "Local",
         code: "local",
         icon: "mdi-folder-multiple-outline"
-    },
+    }
+    /*,
     {
         name: "Amazon S3",
         code: "s3",
         icon: "mdi-amazon-drive"
     }
-    /*{
+    {
         name: "Dropbox",
         code: "dropbox",
         icon: "mdi-dropbox"
@@ -117,10 +121,10 @@ const fileIcons = {
 
 export default {
     components: {
-        Toolbar,
-        Tree,
-        List,
-        Upload
+        toolbar: Toolbar,
+        tree: Tree,
+        list: List,
+        upload: Upload
     },
     model: {
         prop: "path",
@@ -212,11 +216,13 @@ export default {
         }
     },
     created() {
+        console.log("created file browser")
         this.activeStorage = this.storage;
-        this.axiosInstance = this.axios || axios.create(this.axiosConfig);
+        this.axiosInstance = axios.create(this.axiosConfig);
     },
     mounted() {
-        if (!this.path && !(this.tree && this.$vuetify.breakpoint.smAndUp)) {
+        console.log("mounted file browser")
+        if (!this.path && !(this.tree && this.$vuetify.display.smAndUp)) {
             this.pathChanged("/");
         }
     }

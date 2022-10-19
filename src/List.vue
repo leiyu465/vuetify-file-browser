@@ -11,19 +11,18 @@
         >File: {{ path }}</v-card-text>
         <v-card-text v-else-if="dirs.length || files.length" class="grow">
             <v-list subheader v-if="dirs.length">
-                <v-subheader>Folders</v-subheader>
+                <v-list-subheader>Folders</v-list-subheader>
                 <v-list-item
                     v-for="item in dirs"
                     :key="item.basename"
                     @click="changePath(item.path)"
                     class="pl-0"
                 >
-                    <v-list-item-avatar class="ma-0">
-                        <v-icon>mdi-folder-outline</v-icon>
-                    </v-list-item-avatar>
-                    <v-list-item-content class="py-2">
-                        <v-list-item-title v-text="item.basename"></v-list-item-title>
-                    </v-list-item-content>
+                    <template v-slot:prepend>
+                      <v-icon>mdi-folder-outline</v-icon>
+                    </template>
+               
+                    <v-list-item-title v-text="item.basename"></v-list-item-title>
                     <v-list-item-action>
                         <v-btn icon @click.stop="deleteItem(item)">
                             <v-icon color="grey lighten-1">mdi-delete-outline</v-icon>
@@ -36,21 +35,20 @@
             </v-list>
             <v-divider v-if="dirs.length && files.length"></v-divider>
             <v-list subheader v-if="files.length">
-                <v-subheader>Files</v-subheader>
+                <v-list-subheader>Files</v-list-subheader>
                 <v-list-item
                     v-for="item in files"
                     :key="item.basename"
                     @click="changePath(item.path)"
                     class="pl-0"
                 >
-                    <v-list-item-avatar class="ma-0">
-                        <v-icon>{{ icons[item.extension.toLowerCase()] || icons['other'] }}</v-icon>
-                    </v-list-item-avatar>
+                    <template v-slot:prepend>
+                      <v-icon>{{ icons[item.extension.toLowerCase()] || icons['other'] }}</v-icon>
+                    </template>
+                    
 
-                    <v-list-item-content class="py-2">
-                        <v-list-item-title v-text="item.basename"></v-list-item-title>
-                        <v-list-item-subtitle>{{ formatBytes(item.size) }}</v-list-item-subtitle>
-                    </v-list-item-content>
+                    <v-list-item-title v-text="item.basename"></v-list-item-title>
+                    <v-list-item-subtitle>{{ formatBytes(item.size) }}</v-list-item-subtitle>
 
                     <v-list-item-action>
                         <v-btn icon @click.stop="deleteItem(item)">

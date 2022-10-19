@@ -6,13 +6,13 @@
     >
         <v-card>
             <v-toolbar dark :color="options.color" dense flat>
-                <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
+                <v-toolbar-title class="white--text"><span>{{ title }}</span></v-toolbar-title>
             </v-toolbar>
             <v-card-text v-if="message" class="pa-4 text-center" v-html="message"></v-card-text>
             <v-card-actions class="pt-0">
                 <v-spacer></v-spacer>
-                <v-btn text @click="cancel">Cancel</v-btn>
-                <v-btn depressed :color="options.color" @click="agree">Yes</v-btn>
+                <v-btn text @click="cancel"><span>Cancel</span></v-btn>
+                <v-btn depressed :color="options.color" @click="agree"><span>Yes</span></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

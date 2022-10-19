@@ -18,7 +18,8 @@
             <v-card-text v-if="listItems.length" class="pa-0 files-list-wrapper">
                 <v-list two-line v-if="listItems.length">
                     <v-list-item v-for="(file, index) in listItems" :key="index" link>
-                        <v-list-item-avatar>
+                        <template v-slot:prepend>
+
                             <v-img v-if="file.preview" :src="file.preview"></v-img>
                             <v-icon
                                 v-else
@@ -26,11 +27,9 @@
                                 class="mdi-36px"
                                 color="grey lighten-1"
                             ></v-icon>
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                            <v-list-item-title v-text="file.name"></v-list-item-title>
-                            <v-list-item-subtitle>{{ formatBytes(file.size) }} - {{ file.type }}</v-list-item-subtitle>
-                        </v-list-item-content>
+                        </template>
+                        <v-list-item-title v-text="file.name"></v-list-item-title>
+                        <v-list-item-subtitle>{{ formatBytes(file.size) }} - {{ file.type }}</v-list-item-subtitle>
                         <v-list-item-action>
                             <v-btn icon @click="remove(index)">
                                 <v-icon color="grey lighten-1">mdi-close</v-icon>
@@ -195,7 +194,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-deep(.v-overlay__content) {
+::v-deep(.v-overlay__content) {
     width: 90%;
     max-width: 500px;
 
