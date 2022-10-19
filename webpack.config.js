@@ -8,6 +8,7 @@ const PATHS = {
 }
 
 module.exports = {
+  name: "vuetify-file-browser",
   externals: {
     paths: PATHS
   },
@@ -42,7 +43,12 @@ module.exports = {
           options: { sourceMap: true }
         }, {
           loader: 'postcss-loader',
-          options: { sourceMap: true, config: { path: `./postcss.config.js` } }
+          options: { 
+            sourceMap: true, 
+            postcssOptions: { 
+              path: `./postcss.config.js` 
+            } 
+          }
         }, {
           loader: 'sass-loader',
           options: { sourceMap: true }
@@ -66,7 +72,7 @@ module.exports = {
     extensions: ['*', '.js', '.vue', '.json'],
     alias: {
       '~': PATHS.src,
-      'vue$': 'vue/dist/vue.esm.js',
+      'vue$': 'vue/dist/vue.runtime.esm-bundler.js',
     }
   },
   plugins: [
